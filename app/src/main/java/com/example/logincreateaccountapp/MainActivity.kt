@@ -1,14 +1,14 @@
 package com.example.logincreateaccountapp
 
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 
 class MainActivity : AppCompatActivity() {
     lateinit var sharedPreferences: SharedPreferences
@@ -18,6 +18,12 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         sharedPreferences = getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
+
+        // Check if the user is already logged in
+        if (isLoggedIn()) {
+            startActivity(Intent(this, Home::class.java))
+            finish()
+        }
 
         val usernameEditText: EditText = findViewById(R.id.editTextUsername)
         val passwordEditText: EditText = findViewById(R.id.editTextPassword)
@@ -55,8 +61,11 @@ class MainActivity : AppCompatActivity() {
         return username == storedUsername && password == storedPassword
     }
 
+    private fun isLoggedIn(): Boolean {
+        return sharedPreferences.getBoolean("isLoggedIn", false)
+    }
+
     private fun showToast(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
-
 }
